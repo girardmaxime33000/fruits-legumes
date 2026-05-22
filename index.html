@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="FraisPrix — Suivez les prix des fruits et légumes en France, mis à jour chaque semaine." />
+  <title>FraisPrix — Prix des fruits & légumes en France</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%A5%95%3C/text%3E%3C/svg%3E" />
+</head>
+<body>
+
+  <!-- ===== Header / Nav ===== -->
+  <header class="header">
+    <div class="container">
+      <nav class="nav" aria-label="Navigation principale">
+        <a href="#" class="logo" aria-label="FraisPrix - Accueil">
+          <span class="logo-icon" aria-hidden="true">&#129365;</span>
+          <span>FraisPrix</span>
+        </a>
+        <ul class="nav-links" id="navLinks">
+          <li><a href="#dashboard">Tableau de bord</a></li>
+          <li><a href="#fruits" data-nav-tab="fruit">Fruits</a></li>
+          <li><a href="#legumes" data-nav-tab="légume">Légumes</a></li>
+          <li><a href="#regions">Régions</a></li>
+          <li><a href="#seasonal">Saisonnier</a></li>
+        </ul>
+        <button class="nav-toggle" id="navToggle" aria-label="Menu" aria-expanded="false">&#9776;</button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ===== Hero ===== -->
+  <section class="hero" id="dashboard">
+    <div class="container">
+      <h1>Suivez les prix des <span class="accent">fruits &amp; légumes</span> en France</h1>
+      <p class="subtitle">
+        Prix mis à jour hebdomadairement, données issues des marchés nationaux et des principales places de gros.
+      </p>
+      <div class="stats">
+        <div class="stat-card">
+          <div class="stat-value" id="statProducts">42</div>
+          <div class="stat-label">Produits suivis</div>
+        </div>
+        <div class="stat-card orange">
+          <div class="stat-value" id="statFruit">2,45 €/kg</div>
+          <div class="stat-label">Prix moyen fruits</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="statVegetable">1,87 €/kg</div>
+          <div class="stat-label">Prix moyen légumes</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Filters + Product Grid ===== -->
+  <section id="products">
+    <div class="container">
+      <h2 id="fruits">Tous les produits</h2>
+      <p class="section-subtitle" id="productsSubtitle">Parcourez les prix actuels et leur évolution sur 12 semaines.</p>
+
+      <div class="filters" role="region" aria-label="Filtres des produits">
+        <div class="tabs" role="tablist" aria-label="Catégories">
+          <button class="tab active" data-tab="all" role="tab" aria-selected="true">Tous</button>
+          <button class="tab" data-tab="fruit" role="tab" aria-selected="false">Fruits</button>
+          <button class="tab" data-tab="légume" id="legumes" role="tab" aria-selected="false">Légumes</button>
+        </div>
+        <div class="filter-controls">
+          <input
+            type="search"
+            class="search-input"
+            id="searchInput"
+            placeholder="Rechercher un produit…"
+            aria-label="Rechercher un produit"
+          />
+          <select class="sort-select" id="sortSelect" aria-label="Trier les produits">
+            <option value="alpha">Alphabétique</option>
+            <option value="asc">Prix croissant</option>
+            <option value="desc">Prix décroissant</option>
+            <option value="trend">Tendance</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="product-grid" id="productGrid" role="list" aria-live="polite"></div>
+    </div>
+  </section>
+
+  <!-- ===== Regions ===== -->
+  <section id="regions">
+    <div class="container">
+      <h2>Prix par région</h2>
+      <p class="section-subtitle">
+        Indice régional comparé à la moyenne nationale (1,00 = moyenne France).
+      </p>
+      <div class="regions-grid" id="regionsGrid"></div>
+    </div>
+  </section>
+
+  <!-- ===== Seasonal ===== -->
+  <section id="seasonal">
+    <div class="container">
+      <h2>De saison ce mois-ci</h2>
+      <p class="section-subtitle">Mai 2026 — Les meilleurs produits frais à privilégier en ce moment.</p>
+      <div class="seasonal-grid" id="seasonalGrid"></div>
+    </div>
+  </section>
+
+  <!-- ===== Footer ===== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-logo">
+        <span aria-hidden="true">&#129365;</span>
+        <span>FraisPrix</span>
+      </div>
+      <div class="footer-info">
+        &copy; FraisPrix 2026 &middot; Sources : <a href="#">Marchés de France</a>, <a href="#">FranceAgriMer</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ===== Modal ===== -->
+  <div class="modal-overlay" id="modalOverlay" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-hidden="true">
+    <div class="modal" role="document">
+      <button class="modal-close" id="modalClose" aria-label="Fermer">&times;</button>
+      <div class="modal-header">
+        <div class="modal-emoji" id="modalEmoji" aria-hidden="true">&#127822;</div>
+        <div>
+          <div class="modal-title" id="modalTitle">Produit</div>
+          <div class="modal-subtitle" id="modalSubtitle">Évolution sur 12 semaines</div>
+        </div>
+      </div>
+      <div class="modal-stats">
+        <div class="modal-stat current">
+          <div class="label">Actuel</div>
+          <div class="value" id="statCurrent">—</div>
+        </div>
+        <div class="modal-stat min">
+          <div class="label">Min</div>
+          <div class="value" id="statMin">—</div>
+        </div>
+        <div class="modal-stat max">
+          <div class="label">Max</div>
+          <div class="value" id="statMax">—</div>
+        </div>
+        <div class="modal-stat">
+          <div class="label">Moyenne</div>
+          <div class="value" id="statAvg">—</div>
+        </div>
+      </div>
+      <div class="chart-container">
+        <canvas id="priceChart" aria-label="Graphique de l'historique des prix"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Scripts ===== -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
